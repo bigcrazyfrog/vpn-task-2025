@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  jenkins:
+    build: .
+    container_name: jenkins
+    restart: unless-stopped
+    user: root
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./init.groovy.d:/usr/share/jenkins/ref/init.groovy.d
+    environment:
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+
+volumes:
+  jenkins_home:

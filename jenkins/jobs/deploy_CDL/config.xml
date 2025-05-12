@@ -1,0 +1,149 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1520.v56d65e3b_4566">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2255.v56a_15e805f12"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2255.v56a_15e805f12">
+      <jobProperties/>
+      <triggers/>
+      <parameters>
+        <string>MODULE_NAME</string>
+        <string>VERSION</string>
+      </parameters>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>MODULE_NAME</name>
+          <description>Введите имя модуля для деплоя</description>
+          <defaultValue>example-module</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VERSION</name>
+          <description>Введите версию модуля для деплоя</description>
+          <defaultValue>1.0.0</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4106.v7a_8a_8176d450">
+    <script>pipeline {
+    agent any
+
+    parameters {
+        // Параметры для выбора имени модуля и версии
+        string(name: &apos;MODULE_NAME&apos;, defaultValue: &apos;example-module&apos;, description: &apos;Введите имя модуля для деплоя&apos;)
+        string(name: &apos;VERSION&apos;, defaultValue: &apos;1.0.0&apos;, description: &apos;Введите версию модуля для деплоя&apos;)
+    }
+
+    environment {
+        // Параметры окружения
+        DEPLOY_PATH = &quot;/var/jenkins_home/${params.MODULE_NAME}/deploy&quot;
+        CLUSTER_1 = &quot;cluster_1&quot;
+        CLUSTER_2 = &quot;cluster_2&quot;
+    }
+
+    stages {
+        stage(&apos;Подготовка&apos;) {
+            steps {
+                script {
+                    echo &quot;Получаем артефакт для модуля ${params.MODULE_NAME} версии ${params.VERSION}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Артефакт получен.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Проверка физического доступа до кластера&apos;) {
+            steps {
+                script {
+                    echo &quot;Проверяем физический доступ до кластера ${CLUSTER_1}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Кластер ${CLUSTER_1} доступен.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Очистка проекта&apos;) {
+            steps {
+                script {
+                    echo &quot;Очищаем проект для модуля ${params.MODULE_NAME}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Проект очищен.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Деплой в кластер 1&apos;) {
+            steps {
+                script {
+                    echo &quot;Деплой модуля ${params.MODULE_NAME} версии ${params.VERSION} в кластер ${CLUSTER_1}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Деплой завершён в кластер ${CLUSTER_1}.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Проверка деплоя&apos;) {
+            steps {
+                script {
+                    echo &quot;Проверяем успешность деплоя модуля ${params.MODULE_NAME} на кластер ${CLUSTER_1}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Деплой прошёл успешно на кластер ${CLUSTER_1}.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Деплой в кластер 2&apos;) {
+            steps {
+                script {
+                    echo &quot;Деплой модуля ${params.MODULE_NAME} версии ${params.VERSION} в кластер ${CLUSTER_2}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Деплой завершён в кластер ${CLUSTER_2}.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Проверка деплоя в кластер 2&apos;) {
+            steps {
+                script {
+                    echo &quot;Проверяем успешность деплоя модуля ${params.MODULE_NAME} на кластер ${CLUSTER_2}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Деплой прошёл успешно на кластер ${CLUSTER_2}.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Завершение&apos;) {
+            steps {
+                script {
+                    echo &quot;Процесс деплоя завершён. Модуль ${params.MODULE_NAME} версии ${params.VERSION} успешно задеплоен в оба кластера.&quot;
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo &apos;Pipeline завершён.&apos;
+        }
+        success {
+            echo &apos;Деплой завершён успешно!&apos;
+        }
+        failure {
+            echo &apos;Произошла ошибка при деплое.&apos;
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

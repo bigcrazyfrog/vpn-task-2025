@@ -1,0 +1,24 @@
+version: '3.8'
+
+networks:
+  secure-net:
+    external: true
+    driver: bridge 
+
+services:
+  # тут будет VPN кконтейнер для доступа к внутренней сети
+  # vpncontainer:
+  #    ...
+  jenkins:
+    networks:
+      - secure-net
+  nexus:
+    networks:
+      - secure-net
+  db:
+    networks:
+      - secure-net
+  wiki:
+    networks:
+      - secure-net
+

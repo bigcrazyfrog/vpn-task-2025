@@ -1,0 +1,1 @@
+docker compose -f jenkins/docker-compose.yml -f nexus/docker-compose.yml -f wiki/docker-compose.yml -f docker-compose-test.yml up -d

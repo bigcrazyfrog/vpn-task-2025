@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  jenkins:
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+  nexus:
+    ports:
+      - "8081:8081"
+      - "5000:5000"
+  wiki:
+    ports:
+      - "3000:3000"

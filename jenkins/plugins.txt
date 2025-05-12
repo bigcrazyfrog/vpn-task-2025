@@ -1,0 +1,10 @@
+git
+workflow-aggregator
+blueocean
+docker-workflow
+credentials-binding
+ssh-agent
+email-ext
+junit
+job-dsl
+role-strategy

@@ -1,0 +1,124 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1520.v56d65e3b_4566">
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4106.v7a_8a_8176d450">
+    <script>pipeline {
+    agent any
+
+    parameters {
+        string(name: &apos;MODULE_NAME&apos;, defaultValue: &apos;example-module&apos;, description: &apos;Введите имя модуля для сборки&apos;)
+        string(name: &apos;VERSION&apos;, defaultValue: &apos;1.0.0&apos;, description: &apos;Введите версию модуля&apos;)
+    }
+
+    environment {
+        BUILD_DIR = &quot;/var/jenkins_home/build/${params.MODULE_NAME}&quot;
+    }
+
+    stages {
+        stage(&apos;Клонирование репозитория&apos;) {
+            steps {
+                script {
+                    echo &quot;Клонируем репозиторий для модуля ${params.MODULE_NAME}...&quot;
+                    sleep(2)
+                    echo &quot;Успех! Репозиторий клонирован.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Установка зависимостей&apos;) {
+            steps {
+                script {
+                    echo &quot;Устанавливаем зависимости для модуля ${params.MODULE_NAME}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Зависимости установлены.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Сборка&apos;) {
+            steps {
+                script {
+                    echo &quot;Собираем модуль ${params.MODULE_NAME} версии ${params.VERSION}...&quot;
+                    sleep(3)
+                    echo &quot;Успех! Сборка завершена.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Запуск юнит-тестов&apos;) {
+            steps {
+                script {
+                    echo &quot;Запускаем юнит-тесты для модуля ${params.MODULE_NAME}...&quot;
+                    sleep(3)
+                    echo &quot;✅ Все тесты пройдены успешно!&quot;
+                }
+            }
+        }
+
+        stage(&apos;Проверка качества кода (линт)&apos;) {
+            steps {
+                script {
+                    echo &quot;Проверяем качество кода (линт)...&quot;
+                    sleep(2)
+                    echo &quot;✅ Линт пройден успешно!&quot;
+                }
+            }
+        }
+
+        stage(&apos;Анализ покрытия кода&apos;) {
+            steps {
+                script {
+                    echo &quot;Анализируем покрытие кода для модуля ${params.MODULE_NAME}...&quot;
+                    sleep(2)
+                    echo &quot;📈 Покрытие кода: 87% — приемлемо.&quot;
+                }
+            }
+        }
+
+        stage(&apos;Артефактирование&apos;) {
+            steps {
+                script {
+                    echo &quot;Упаковываем артефакт версии ${params.VERSION}...&quot;
+                    sleep(2)
+                    echo &quot;📦 Артефакт создан и сохранён в ${BUILD_DIR}&quot;
+                }
+            }
+        }
+
+        stage(&apos;Загрузка в артефакт-репозиторий&apos;) {
+            steps {
+                script {
+                    echo &quot;Загружаем артефакт в артефакт-репозиторий...&quot;
+                    sleep(3)
+                    echo &quot;📤 Успешно загружено!&quot;
+                }
+            }
+        }
+
+        stage(&apos;CI завершён&apos;) {
+            steps {
+                echo &quot;✅ CI-процесс для модуля ${params.MODULE_NAME} версии ${params.VERSION} завершён успешно.&quot;
+            }
+        }
+    }
+
+    post {
+        always {
+            echo &quot;CI Pipeline завершён.&quot;
+        }
+        success {
+            echo &quot;✔️ Все этапы CI выполнены успешно!&quot;
+        }
+        failure {
+            echo &quot;❌ Ошибка на одном из этапов CI.&quot;
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
